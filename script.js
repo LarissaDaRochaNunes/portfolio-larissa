@@ -1,21 +1,32 @@
 const menu = document.getElementById("menu");
 menu.innerHTML = `
   <ul id="menu-links">
-    <li><a href="index.html" id="nav-index">História</a></li>
-    <li><a href="projetos.html" id="nav-projetos">Projetos</a></li>
-    <li><a href="valores.html" id="nav-valores">Missão, visão e valores</a></li>
-    <li><a href="contato.html" id="nav-contato">Contato</a></li>
+    <li><a href="#historia" class="nav-link">História</a></li>
+    <li><a href="#projetos" class="nav-link">Projetos</a></li>
+    <li><a href="#missao" class="nav-link">Missão, visão e valores</a></li>
+    <li><a href="#contatos" class="nav-link">Contato</a></li>
   </ul>
 `;
 
-const paginaAtual = window.location.pathname.split("/").pop();
+const secoes = document.querySelectorAll("main > section");
+const linksMenu = document.querySelectorAll(".nav-link");
+const opcoes = {
+    rootMargin: "-100px 0px -40% 0px" 
+};
 
-if (paginaAtual === "index.html" || paginaAtual === "") {
-    document.getElementById("nav-index").classList.add("active");
-} else if (paginaAtual === "projetos.html") {
-    document.getElementById("nav-projetos").classList.add("active");
-} else if (paginaAtual === "valores.html") {
-    document.getElementById("nav-valores").classList.add("active");
-} else if (paginaAtual === "contato.html") {
-    document.getElementById("nav-contato").classList.add("active");
-}
+const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach(entrada => {
+        if (entrada.isIntersecting) {
+            const idSecao = entrada.target.getAttribute("id");
+            linksMenu.forEach(link => link.classList.remove("active"));
+            const linkAtivo = document.querySelector(`a[href="#${idSecao}"]`);
+            if (linkAtivo) {
+                linkAtivo.classList.add("active");
+            }
+        }
+    });
+}, opcoes);
+
+secoes.forEach(secao => {
+    observador.observe(secao);
+});
